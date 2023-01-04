@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal } from '../Modal/Modal';
+import Modal from '../Modal/Modal';
 
 class ImageGallery extends Component {
   state = { showModal: false };
@@ -17,7 +17,7 @@ class ImageGallery extends Component {
         <button type="button" onClick={this.toggleModal}>
           Відкрити
         </button>
-        {showModal && <Modal onOpen={this.toggleModal} />}
+        {showModal && <Modal onOpenModal={this.toggleModal} />}
       </div>
     );
   }
