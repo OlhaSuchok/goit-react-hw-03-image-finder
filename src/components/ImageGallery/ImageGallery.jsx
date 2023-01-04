@@ -38,6 +38,7 @@ class ImageGallery extends Component {
         {loading && <p>Завантаження...</p>}
         {/* {images && <ImageGalleryItem />} */}
         {images && <p>Тут буде розмітка з картинками!!</p>}
+        <ImageGalleryItem images={images} />
         {showModal && <Modal onOpenModal={this.toggleModal} />}
       </div>
     );
