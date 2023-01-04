@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { ModalWrapper, Overlay } from './Modal.styled';
 
