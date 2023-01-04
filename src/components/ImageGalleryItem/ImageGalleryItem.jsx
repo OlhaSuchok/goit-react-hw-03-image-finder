@@ -4,7 +4,7 @@ class ImageGalleryItem extends Component {
   state = {};
   render() {
     return (
-      <li class="gallery-item">
+      <li>
         <img src="" alt="" />
       </li>
     );
