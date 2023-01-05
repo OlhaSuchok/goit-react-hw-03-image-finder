@@ -4,8 +4,8 @@ import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Loader from '../Loader/Loader';
 import RejectedMessage from '../RejectedMessage/RejectedMessage';
 import IdleMessage from '../IdleMessage/IdleMessage';
+import Button from '../Button/Button';
 import imagesApi from '../services/images-api';
-import { GalleryWrapper } from './ImageGallery.styled';
 
 const Status = {
   IDLE: 'idle',
@@ -16,7 +16,7 @@ const Status = {
 
 class ImageGallery extends Component {
   state = {
-    images: null,
+    images: [],
     showModal: false,
     largeImage: '',
     error: null,
@@ -27,12 +27,20 @@ class ImageGallery extends Component {
     const prevName = prevProps.imageNameValue;
     const nextName = this.props.imageNameValue;
 
-    if (prevName !== nextName) {
+    const prevPage = prevProps.page;
+    const nextPage = this.props.page;
+
+    if (prevName !== nextName || prevPage !== nextPage) {
       this.setState({ status: Status.PENDING });
 
       imagesApi
-        .fetchImages(nextName)
-        .then(images => this.setState({ images, status: Status.RESOLVED }))
+        .fetchImages(nextName, nextPage)
+        .then(images =>
+          this.setState(prevState => ({
+            images: [...prevState.images, ...images.hits],
+            status: Status.RESOLVED,
+          }))
+        )
         .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
   }
@@ -70,18 +78,27 @@ class ImageGallery extends Component {
 
     if (status === Status.RESOLVED) {
       return (
-        <GalleryWrapper>
+        <>
           <ImageGalleryItem images={images} onClick={this.toggleModal} />
+          <Button onClick={this.props.onLoadMore} />
           {showModal && (
             <Modal
               onOpenModal={this.toggleModal}
               largeImage={this.state.largeImage}
             />
           )}
-        </GalleryWrapper>
+        </>
       );
     }
   }
 }
 
 export default ImageGallery;
+
+// {
+//   status === Status.PENDING ? (
+//     <Loader />
+//   ) : (
+//     <Button onClick={this.props.onLoadMore} />
+//   );
+// }

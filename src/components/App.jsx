@@ -1,24 +1,37 @@
 import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
+import { Box } from 'components/Box/Box';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 
 class App extends Component {
   state = {
     imageNameValue: '',
+    page: 1,
   };
 
   handleFormSearchSubmit = imageNameValue => {
     this.setState({ imageNameValue });
   };
 
+  onLoadMore = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
+
   render() {
     return (
-      <div>
-        <Searchbar onFormSearchSubmit={this.handleFormSearchSubmit} />
-        <ImageGallery imageNameValue={this.state.imageNameValue} />
+      <Box p={20}>
+        <Searchbar
+          onFormSearchSubmit={this.handleFormSearchSubmit}
+          page={this.state.page}
+        />
+        <ImageGallery
+          imageNameValue={this.state.imageNameValue}
+          onLoadMore={this.onLoadMore}
+          page={this.state.page}
+        />
         <ToastContainer autoClose={3000} />
-      </div>
+      </Box>
     );
   }
 }

@@ -12,10 +12,12 @@ import {
 class Searchbar extends Component {
   state = {
     imageNameValue: '',
+    // page: 1,
   };
 
   handleSubmit = event => {
     event.preventDefault();
+    // this.props.page = 1;
 
     if (this.state.imageNameValue.trim() === '') {
       toast.warn("Введіть ім'я параметра у пошуку!");
@@ -30,6 +32,7 @@ class Searchbar extends Component {
   };
 
   render() {
+    console.log(this.props.page);
     return (
       <SearchBar>
         <SearchForm onSubmit={this.handleSubmit}>
