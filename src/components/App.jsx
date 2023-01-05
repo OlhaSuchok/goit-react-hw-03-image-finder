@@ -18,12 +18,17 @@ class App extends Component {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
+  onResetPage = () => {
+    this.setState({ page: 1 });
+  };
+
   render() {
     return (
       <Box p={20}>
         <Searchbar
           onFormSearchSubmit={this.handleFormSearchSubmit}
-          page={this.state.page}
+          // page={this.state.page}
+          onResetPage={this.onResetPage}
         />
         <ImageGallery
           imageNameValue={this.state.imageNameValue}

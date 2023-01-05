@@ -94,11 +94,3 @@ class ImageGallery extends Component {
 }
 
 export default ImageGallery;
-
-// {
-//   status === Status.PENDING ? (
-//     <Loader />
-//   ) : (
-//     <Button onClick={this.props.onLoadMore} />
-//   );
-// }
