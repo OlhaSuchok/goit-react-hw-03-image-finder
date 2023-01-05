@@ -29,7 +29,7 @@ class ImageGallery extends Component {
   }
 
   toggleModal = event => {
-    const { showModal, largeImage } = this.state;
+    const { showModal } = this.state;
     if (showModal) {
       this.setState(({ showModal }) => ({
         showModal: !showModal,
@@ -38,7 +38,7 @@ class ImageGallery extends Component {
     if (event.target.nodeName !== 'IMG') {
       return;
     }
-    this.setState(({ showModal, largeImage }) => ({
+    this.setState(({ showModal }) => ({
       showModal: !showModal,
       largeImage: event.target.dataset.image,
     }));
