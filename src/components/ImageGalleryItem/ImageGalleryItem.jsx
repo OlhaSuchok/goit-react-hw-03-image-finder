@@ -23,3 +23,5 @@ export default function ImageGalleryItem({ images, onClick }) {
     </Gallery>
   );
 }
+
+// this.props.page: 1

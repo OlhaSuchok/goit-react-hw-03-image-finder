@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
+import { GoSearch } from 'react-icons/go';
 import 'react-toastify/dist/ReactToastify.css';
 import {
   SearchBar,
@@ -31,14 +32,12 @@ class Searchbar extends Component {
   };
 
   render() {
-    console.log(this.props.page);
     return (
       <SearchBar>
         <SearchForm onSubmit={this.handleSubmit}>
           <SearchFormButton type="submit">
-            <SearchFormButtonLabel>Search</SearchFormButtonLabel>
+            <GoSearch size={24} />
           </SearchFormButton>
-
           <SearchFormInput
             type="text"
             autocomplete="off"

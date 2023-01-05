@@ -30,18 +30,24 @@ class ImageGallery extends Component {
     const prevPage = prevProps.page;
     const nextPage = this.props.page;
 
+    if (prevName !== nextName) {
+      this.setState({ images: [] });
+    }
+
     if (prevName !== nextName || prevPage !== nextPage) {
       this.setState({ status: Status.PENDING });
 
-      imagesApi
-        .fetchImages(nextName, nextPage)
-        .then(images =>
-          this.setState(prevState => ({
-            images: [...prevState.images, ...images.hits],
-            status: Status.RESOLVED,
-          }))
-        )
-        .catch(error => this.setState({ error, status: Status.REJECTED }));
+      setTimeout(() => {
+        imagesApi
+          .fetchImages(nextName, nextPage)
+          .then(images =>
+            this.setState(prevState => ({
+              images: [...prevState.images, ...images.hits],
+              status: Status.RESOLVED,
+            }))
+          )
+          .catch(error => this.setState({ error, status: Status.REJECTED }));
+      }, 2000);
     }
   }
 
@@ -68,19 +74,26 @@ class ImageGallery extends Component {
       return <IdleMessage />;
     }
 
-    if (status === Status.PENDING) {
-      return <Loader />;
-    }
-
     if (status === Status.REJECTED) {
       return <RejectedMessage message={error.message} />;
+    }
+
+    if (status === Status.PENDING) {
+      return <Loader />;
     }
 
     if (status === Status.RESOLVED) {
       return (
         <>
           <ImageGalleryItem images={images} onClick={this.toggleModal} />
-          <Button onClick={this.props.onLoadMore} />
+          {images.length >= 12 && status === Status.RESOLVED && (
+            <Button onClick={this.props.onLoadMore} />
+          )}
+          {/* {status === Status.PENDING ? (
+            <Loader />
+          ) : (
+            <Button onClick={this.props.onLoadMore} />
+          )} */}
           {showModal && (
             <Modal
               onOpenModal={this.toggleModal}

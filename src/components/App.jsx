@@ -27,7 +27,6 @@ class App extends Component {
       <Box p={20}>
         <Searchbar
           onFormSearchSubmit={this.handleFormSearchSubmit}
-          // page={this.state.page}
           onResetPage={this.onResetPage}
         />
         <ImageGallery
