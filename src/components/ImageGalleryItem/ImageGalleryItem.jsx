@@ -5,10 +5,10 @@ import {
 
 import { Gallery } from '../ImageGallery/ImageGallery.styled';
 
-export default function ImageGalleryItem({ images, onClick }) {
+export default function ImageGalleryItem({ images: { hits }, onClick }) {
   return (
     <Gallery>
-      {images.map(({ id, webformatURL, largeImageURL, tags }) => {
+      {hits.map(({ id, webformatURL, largeImageURL, tags }) => {
         return (
           <ImageGalleryItems key={id} onClick={onClick}>
             <ImageGalleryImage

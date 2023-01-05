@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import Modal from '../Modal/Modal';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
+import Loader from '../Loader/Loader';
+import RejectedMessage from '../RejectedMessage/RejectedMessage';
+import IdleMessage from '../IdleMessage/IdleMessage';
+import imagesApi from '../services/images-api';
 
 import { GalleryWrapper } from './ImageGallery.styled';
 
 class ImageGallery extends Component {
   state = {
     images: null,
-    loading: false,
     showModal: false,
     largeImage: '',
     error: null,
+    status: 'idle',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -18,22 +22,12 @@ class ImageGallery extends Component {
     const nextName = this.props.imageNameValue;
 
     if (prevName !== nextName) {
-      this.setState({ loading: true });
+      this.setState({ status: 'pending' });
 
-      setTimeout(() => {
-        fetch(
-          `https://pixabay.com/api/?q=${nextName}&page=1&key=31897443-8d2d373622bb59a1b3cd97685&image_type=photo&orientation=horizontal&per_page=12`
-        )
-          .then(response => {
-            if (response.ok) {
-              return response.json();
-            }
-            return Promise.reject(new Error(`Немає даних з ім'ям ${nextName}`));
-          })
-          .then(images => this.setState({ images }))
-          .catch(error => this.setState({ error }))
-          .finally(() => this.setState({ loading: false }));
-      }, 1000);
+      imagesApi
+        .fetchImages(nextName)
+        .then(images => this.setState({ images, status: 'resolved' }))
+        .catch(error => this.setState({ error, status: 'rejected' }));
     }
   }
 
@@ -57,23 +51,35 @@ class ImageGallery extends Component {
   };
 
   render() {
-    const { images, showModal, loading, error } = this.state;
+    const { images, showModal, error, status } = this.state;
+    // const { imageNameValue } = this.props;
     console.log(images);
-    return (
-      <GalleryWrapper>
-        {loading && <p>Завантаження...</p>}
-        {error && <p>{error.message}</p>}
-        {images && (
-          <ImageGalleryItem images={images.hits} onClick={this.toggleModal} />
-        )}
-        {showModal && (
-          <Modal
-            onOpenModal={this.toggleModal}
-            largeImage={this.state.largeImage}
-          />
-        )}
-      </GalleryWrapper>
-    );
+
+    if (status === 'idle') {
+      return <IdleMessage />;
+    }
+
+    if (status === 'pending') {
+      return <Loader />;
+    }
+
+    if (status === 'rejected') {
+      return <RejectedMessage message={error.message} />;
+    }
+
+    if (status === 'resolved') {
+      return (
+        <GalleryWrapper>
+          <ImageGalleryItem images={images} onClick={this.toggleModal} />
+          {showModal && (
+            <Modal
+              onOpenModal={this.toggleModal}
+              largeImage={this.state.largeImage}
+            />
+          )}
+        </GalleryWrapper>
+      );
+    }
   }
 }
 
