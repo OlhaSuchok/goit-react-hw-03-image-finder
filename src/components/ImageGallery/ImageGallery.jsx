@@ -78,24 +78,40 @@ class ImageGallery extends Component {
       return <RejectedMessage message={error.message} />;
     }
 
-    if (status === Status.PENDING) {
-      return <Loader />;
-    }
+    // if (status === Status.PENDING) {
+    //   return <Loader />;
+    // }
 
-    if (status === Status.RESOLVED) {
-      return (
-        <>
-          <ImageGalleryItem images={images} onClick={this.toggleModal} />
+    // if (status === Status.RESOLVED) {
+    //   return (
+    //     <>
+    //       <ImageGalleryItem images={images} onClick={this.toggleModal} />
+    //       <Button onClick={this.props.onLoadMore} />
+    //       {showModal && (
+    //         <Modal
+    //           onOpenModal={this.toggleModal}
+    //           largeImage={this.state.largeImage}
+    //         />
+    //       )}
+    //     </>
+    //   );
+    // }
+
+    return (
+      <>
+        <ImageGalleryItem images={images} onClick={this.toggleModal} />
+        {status === Status.PENDING && <Loader />}
+        {images.length >= 12 && status !== Status.PENDING && (
           <Button onClick={this.props.onLoadMore} />
-          {showModal && (
-            <Modal
-              onOpenModal={this.toggleModal}
-              largeImage={this.state.largeImage}
-            />
-          )}
-        </>
-      );
-    }
+        )}
+        {showModal && (
+          <Modal
+            onOpenModal={this.toggleModal}
+            largeImage={this.state.largeImage}
+          />
+        )}
+      </>
+    );
   }
 }
 
