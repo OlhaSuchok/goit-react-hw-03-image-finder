@@ -12,3 +12,8 @@ export const Gallery = styled.ul`
   margin-left: auto;
   margin-right: auto;
 `;
+
+export const GalleryWrapper = styled.div`
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;

@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import Modal from '../Modal/Modal';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 
+import { GalleryWrapper } from './ImageGallery.styled';
+
 class ImageGallery extends Component {
   state = {
     images: null,
     loading: false,
     showModal: false,
     largeImage: '',
+    error: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -21,8 +24,14 @@ class ImageGallery extends Component {
         fetch(
           `https://pixabay.com/api/?q=${nextName}&page=1&key=31897443-8d2d373622bb59a1b3cd97685&image_type=photo&orientation=horizontal&per_page=12`
         )
-          .then(response => response.json())
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            }
+            return Promise.reject(new Error(`Немає даних з ім'ям ${nextName}`));
+          })
           .then(images => this.setState({ images }))
+          .catch(error => this.setState({ error }))
           .finally(() => this.setState({ loading: false }));
       }, 1000);
     }
@@ -48,11 +57,12 @@ class ImageGallery extends Component {
   };
 
   render() {
-    const { images, showModal, loading } = this.state;
+    const { images, showModal, loading, error } = this.state;
     console.log(images);
     return (
-      <div>
+      <GalleryWrapper>
         {loading && <p>Завантаження...</p>}
+        {error && <p>{error.message}</p>}
         {images && (
           <ImageGalleryItem images={images.hits} onClick={this.toggleModal} />
         )}
@@ -62,7 +72,7 @@ class ImageGallery extends Component {
             largeImage={this.state.largeImage}
           />
         )}
-      </div>
+      </GalleryWrapper>
     );
   }
 }
