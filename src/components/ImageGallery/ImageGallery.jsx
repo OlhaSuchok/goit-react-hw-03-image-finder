@@ -5,8 +5,14 @@ import Loader from '../Loader/Loader';
 import RejectedMessage from '../RejectedMessage/RejectedMessage';
 import IdleMessage from '../IdleMessage/IdleMessage';
 import imagesApi from '../services/images-api';
-
 import { GalleryWrapper } from './ImageGallery.styled';
+
+const Status = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  RESOLVED: 'resolved',
+  REJECTED: 'rejected',
+};
 
 class ImageGallery extends Component {
   state = {
@@ -14,7 +20,7 @@ class ImageGallery extends Component {
     showModal: false,
     largeImage: '',
     error: null,
-    status: 'idle',
+    status: Status.IDLE,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -22,12 +28,12 @@ class ImageGallery extends Component {
     const nextName = this.props.imageNameValue;
 
     if (prevName !== nextName) {
-      this.setState({ status: 'pending' });
+      this.setState({ status: Status.PENDING });
 
       imagesApi
         .fetchImages(nextName)
-        .then(images => this.setState({ images, status: 'resolved' }))
-        .catch(error => this.setState({ error, status: 'rejected' }));
+        .then(images => this.setState({ images, status: Status.RESOLVED }))
+        .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
   }
 
@@ -45,29 +51,24 @@ class ImageGallery extends Component {
       showModal: !showModal,
       largeImage: event.target.dataset.image,
     }));
-
-    console.log(event.target.dataset.image);
-    console.log(event.target.nodeName);
   };
 
   render() {
     const { images, showModal, error, status } = this.state;
-    // const { imageNameValue } = this.props;
-    console.log(images);
 
-    if (status === 'idle') {
+    if (status === Status.IDLE) {
       return <IdleMessage />;
     }
 
-    if (status === 'pending') {
+    if (status === Status.PENDING) {
       return <Loader />;
     }
 
-    if (status === 'rejected') {
+    if (status === Status.REJECTED) {
       return <RejectedMessage message={error.message} />;
     }
 
-    if (status === 'resolved') {
+    if (status === Status.RESOLVED) {
       return (
         <GalleryWrapper>
           <ImageGalleryItem images={images} onClick={this.toggleModal} />

@@ -20,7 +20,7 @@ class Modal extends Component {
 
   onBackdropClick = event => {
     if (event.currentTarget === event.target) {
-      this.props.onOpenModal();
+      this.props.onOpenModal(event);
     }
   };
 
