@@ -7,7 +7,6 @@ import {
   SearchForm,
   SearchFormInput,
   SearchFormButton,
-  SearchFormButtonLabel,
 } from './Searchbar.styled';
 
 class Searchbar extends Component {
