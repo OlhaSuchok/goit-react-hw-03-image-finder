@@ -35,7 +35,6 @@ class ImageGallery extends Component {
 
   render() {
     const { images, showModal, loading } = this.state;
-    const { imageNameValue } = this.props;
     console.log(images);
     return (
       <div>
