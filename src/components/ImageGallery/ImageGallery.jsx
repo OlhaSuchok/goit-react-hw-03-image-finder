@@ -50,7 +50,15 @@ class ImageGallery extends Component {
         {/* {images && <ImageGalleryItem />} */}
         {images && (
           <ul>
-            <li>{images.hits[0].user}</li>
+            {/* <li>{images.hits[0].user}</li> */}
+
+            {images.hits.map(({ id, webformatURL, largeImageURL }) => {
+              return (
+                <li key={id}>
+                  <img src={webformatURL} alt="picture" />
+                </li>
+              );
+            })}
           </ul>
         )}
         <ImageGalleryItem images={images} imageNameValue={imageNameValue} />
