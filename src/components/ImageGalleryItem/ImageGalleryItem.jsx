@@ -5,13 +5,17 @@ import {
 
 import { Gallery } from '../ImageGallery/ImageGallery.styled';
 
-export default function ImageGalleryItem({ images }) {
+export default function ImageGalleryItem({ images, onClick }) {
   return (
     <Gallery>
       {images.map(({ id, webformatURL, largeImageURL, tags }) => {
         return (
-          <ImageGalleryItems key={id}>
-            <ImageGalleryImage src={webformatURL} alt={tags} />
+          <ImageGalleryItems key={id} onClick={onClick}>
+            <ImageGalleryImage
+              src={webformatURL}
+              alt={tags}
+              data-image={largeImageURL}
+            />
           </ImageGalleryItems>
         );
       })}

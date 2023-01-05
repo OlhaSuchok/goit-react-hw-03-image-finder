@@ -7,6 +7,7 @@ class ImageGallery extends Component {
     images: null,
     loading: false,
     showModal: false,
+    largeImage: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -27,10 +28,23 @@ class ImageGallery extends Component {
     }
   }
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({
+  toggleModal = event => {
+    const { showModal, largeImage } = this.state;
+    if (showModal) {
+      this.setState(({ showModal }) => ({
+        showModal: !showModal,
+      }));
+    }
+    if (event.target.nodeName !== 'IMG') {
+      return;
+    }
+    this.setState(({ showModal, largeImage }) => ({
       showModal: !showModal,
+      largeImage: event.target.dataset.image,
     }));
+
+    console.log(event.target.dataset.image);
+    console.log(event.target.nodeName);
   };
 
   render() {
@@ -38,12 +52,16 @@ class ImageGallery extends Component {
     console.log(images);
     return (
       <div>
-        <button type="button" onClick={this.toggleModal}>
-          Відкрити
-        </button>
         {loading && <p>Завантаження...</p>}
-        {images && <ImageGalleryItem images={images.hits} />}
-        {showModal && <Modal onOpenModal={this.toggleModal} />}
+        {images && (
+          <ImageGalleryItem images={images.hits} onClick={this.toggleModal} />
+        )}
+        {showModal && (
+          <Modal
+            onOpenModal={this.toggleModal}
+            largeImage={this.state.largeImage}
+          />
+        )}
       </div>
     );
   }
