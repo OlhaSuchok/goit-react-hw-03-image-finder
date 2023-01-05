@@ -15,9 +15,6 @@ class ImageGallery extends Component {
 
     if (prevName !== nextName) {
       this.setState({ loading: true });
-      console.log('Змінилося значення!');
-      console.log('prevProps.imageNameValue:', prevName);
-      console.log('this.props.imageNameValue:', nextName);
 
       setTimeout(() => {
         fetch(
@@ -40,28 +37,13 @@ class ImageGallery extends Component {
     const { images, showModal, loading } = this.state;
     const { imageNameValue } = this.props;
     console.log(images);
-    console.log(imageNameValue);
     return (
       <div>
         <button type="button" onClick={this.toggleModal}>
           Відкрити
         </button>
         {loading && <p>Завантаження...</p>}
-        {/* {images && <ImageGalleryItem />} */}
-        {images && (
-          <ul>
-            {/* <li>{images.hits[0].user}</li> */}
-
-            {images.hits.map(({ id, webformatURL, largeImageURL }) => {
-              return (
-                <li key={id}>
-                  <img src={webformatURL} alt="picture" />
-                </li>
-              );
-            })}
-          </ul>
-        )}
-        <ImageGalleryItem images={images} imageNameValue={imageNameValue} />
+        {images && <ImageGalleryItem images={images.hits} />}
         {showModal && <Modal onOpenModal={this.toggleModal} />}
       </div>
     );

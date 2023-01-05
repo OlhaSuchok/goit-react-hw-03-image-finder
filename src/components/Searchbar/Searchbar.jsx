@@ -26,7 +26,6 @@ class Searchbar extends Component {
   };
 
   handleNameChange = event => {
-    console.log(event.currentTarget.value);
     this.setState({ imageNameValue: event.currentTarget.value.toLowerCase() });
   };
 

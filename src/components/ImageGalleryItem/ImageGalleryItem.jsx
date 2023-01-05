@@ -1,14 +1,20 @@
-import React, { Component } from 'react';
+import {
+  ImageGalleryItems,
+  ImageGalleryImage,
+} from './ImageGalleryItem.styled';
 
-class ImageGalleryItem extends Component {
-  state = {};
-  render() {
-    return (
-      <li>
-        <img src="" alt="" />
-      </li>
-    );
-  }
+import { Gallery } from '../ImageGallery/ImageGallery.styled';
+
+export default function ImageGalleryItem({ images }) {
+  return (
+    <Gallery>
+      {images.map(({ id, webformatURL, largeImageURL, tags }) => {
+        return (
+          <ImageGalleryItems key={id}>
+            <ImageGalleryImage src={webformatURL} alt={tags} />
+          </ImageGalleryItems>
+        );
+      })}
+    </Gallery>
+  );
 }
-
-export default ImageGalleryItem;

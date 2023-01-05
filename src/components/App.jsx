@@ -9,7 +9,6 @@ class App extends Component {
   };
 
   handleFormSearchSubmit = imageNameValue => {
-    console.log(imageNameValue);
     this.setState({ imageNameValue });
   };
 
