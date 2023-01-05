@@ -17,7 +17,7 @@ class App extends Component {
     return (
       <div>
         <Searchbar onFormSearchSubmit={this.handleFormSearchSubmit} />
-        <ImageGallery />
+        <ImageGallery imageNameValue={this.state.imageNameValue} />
         <ToastContainer autoClose={3000} />
       </div>
     );

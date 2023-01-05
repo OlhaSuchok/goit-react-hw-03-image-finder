@@ -5,20 +5,29 @@ import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 class ImageGallery extends Component {
   state = {
     images: null,
-    loading: null,
+    loading: false,
     showModal: false,
   };
 
-  componentDidMount() {
-    this.setState({ loading: true });
-    setTimeout(() => {
-      fetch(
-        'https://pixabay.com/api/?q=cat&page=1&key=31897443-8d2d373622bb59a1b3cd97685&image_type=photo&orientation=horizontal&per_page=12'
-      )
-        .then(response => response.json())
-        .then(images => this.setState({ images }))
-        .finally(() => this.setState({ loading: false }));
-    }, 1000);
+  componentDidUpdate(prevProps, prevState) {
+    const prevName = prevProps.imageNameValue;
+    const nextName = this.props.imageNameValue;
+
+    if (prevName !== nextName) {
+      this.setState({ loading: true });
+      console.log('Змінилося значення!');
+      console.log('prevProps.imageNameValue:', prevName);
+      console.log('this.props.imageNameValue:', nextName);
+
+      setTimeout(() => {
+        fetch(
+          `https://pixabay.com/api/?q=${nextName}&page=1&key=31897443-8d2d373622bb59a1b3cd97685&image_type=photo&orientation=horizontal&per_page=12`
+        )
+          .then(response => response.json())
+          .then(images => this.setState({ images }))
+          .finally(() => this.setState({ loading: false }));
+      }, 1000);
+    }
   }
 
   toggleModal = () => {
@@ -29,7 +38,9 @@ class ImageGallery extends Component {
 
   render() {
     const { images, showModal, loading } = this.state;
+    const { imageNameValue } = this.props;
     console.log(images);
+    console.log(imageNameValue);
     return (
       <div>
         <button type="button" onClick={this.toggleModal}>
@@ -37,8 +48,12 @@ class ImageGallery extends Component {
         </button>
         {loading && <p>Завантаження...</p>}
         {/* {images && <ImageGalleryItem />} */}
-        {images && <p>Тут буде розмітка з картинками!!</p>}
-        <ImageGalleryItem images={images} />
+        {images && (
+          <ul>
+            <li>{images.hits[0].user}</li>
+          </ul>
+        )}
+        <ImageGalleryItem images={images} imageNameValue={imageNameValue} />
         {showModal && <Modal onOpenModal={this.toggleModal} />}
       </div>
     );
