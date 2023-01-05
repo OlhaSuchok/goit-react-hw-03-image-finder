@@ -86,14 +86,7 @@ class ImageGallery extends Component {
       return (
         <>
           <ImageGalleryItem images={images} onClick={this.toggleModal} />
-          {images.length >= 12 && status === Status.RESOLVED && (
-            <Button onClick={this.props.onLoadMore} />
-          )}
-          {/* {status === Status.PENDING ? (
-            <Loader />
-          ) : (
-            <Button onClick={this.props.onLoadMore} />
-          )} */}
+          <Button onClick={this.props.onLoadMore} />
           {showModal && (
             <Modal
               onOpenModal={this.toggleModal}
