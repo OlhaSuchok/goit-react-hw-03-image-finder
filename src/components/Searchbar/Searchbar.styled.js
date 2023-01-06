@@ -13,6 +13,7 @@ export const SearchBar = styled.header`
   padding-left: 24px;
   padding-top: 12px;
   padding-bottom: 12px;
+  margin-bottom: 30px;
   color: #fff;
   background-color: #3f51b5;
   border-radius: 3px;

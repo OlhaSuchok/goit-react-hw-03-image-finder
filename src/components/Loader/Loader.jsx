@@ -12,7 +12,7 @@ export default function Loader() {
       wrapperStyle={{
         display: 'flex',
         justifyContent: 'center',
-        marginTop: '30px',
+        marginTop: '15px',
       }}
       visible={true}
     />

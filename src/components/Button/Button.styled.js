@@ -11,12 +11,13 @@ export const ButtonLoadMore = styled.button`
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 20px;
   color: #fff;
   border: 0;
   text-decoration: none;
   cursor: pointer;
-  font-family: inherit;
-  font-size: 18px;
+  font-family: emoji;
+  font-size: 20px;
   line-height: 24px;
   font-style: normal;
   font-weight: 500;

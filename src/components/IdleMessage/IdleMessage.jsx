@@ -1,5 +1,5 @@
 import { IdleText } from './IdleMessage.styled';
 
 export default function IdleMessage() {
-  return <IdleText>Введіть запит для пошуку</IdleText>;
+  return <IdleText>Введіть ім'я парамента у пошуку.</IdleText>;
 }

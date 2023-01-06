@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import {
   ImageGalleryItems,
   ImageGalleryImage,
@@ -16,6 +18,7 @@ export default function ImageGalleryItem({ images, onClick }) {
               src={webformatURL}
               alt={tags}
               data-image={largeImageURL}
+              data-tag={tags}
             />
           </ImageGalleryItems>
         );
@@ -24,4 +27,7 @@ export default function ImageGalleryItem({ images, onClick }) {
   );
 }
 
-// this.props.page: 1
+ImageGalleryItem.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onClick: PropTypes.func.isRequired,
+};

@@ -4,6 +4,7 @@ import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Loader from '../Loader/Loader';
 import RejectedMessage from '../RejectedMessage/RejectedMessage';
 import IdleMessage from '../IdleMessage/IdleMessage';
+import FailureMessage from '../FailureMessage/FailureMessage';
 import Button from '../Button/Button';
 import imagesApi from '../services/images-api';
 
@@ -19,6 +20,7 @@ class ImageGallery extends Component {
     images: [],
     showModal: false,
     largeImage: '',
+    tags: '',
     error: null,
     status: Status.IDLE,
   };
@@ -47,7 +49,7 @@ class ImageGallery extends Component {
             }))
           )
           .catch(error => this.setState({ error, status: Status.REJECTED }));
-      }, 2000);
+      }, 1000);
     }
   }
 
@@ -64,11 +66,13 @@ class ImageGallery extends Component {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
       largeImage: event.target.dataset.image,
+      tags: event.target.dataset.tag,
     }));
   };
 
   render() {
     const { images, showModal, error, status } = this.state;
+    const nextName = this.props.imageNameValue;
 
     if (status === Status.IDLE) {
       return <IdleMessage />;
@@ -78,25 +82,6 @@ class ImageGallery extends Component {
       return <RejectedMessage message={error.message} />;
     }
 
-    // if (status === Status.PENDING) {
-    //   return <Loader />;
-    // }
-
-    // if (status === Status.RESOLVED) {
-    //   return (
-    //     <>
-    //       <ImageGalleryItem images={images} onClick={this.toggleModal} />
-    //       <Button onClick={this.props.onLoadMore} />
-    //       {showModal && (
-    //         <Modal
-    //           onOpenModal={this.toggleModal}
-    //           largeImage={this.state.largeImage}
-    //         />
-    //       )}
-    //     </>
-    //   );
-    // }
-
     return (
       <>
         <ImageGalleryItem images={images} onClick={this.toggleModal} />
@@ -104,10 +89,14 @@ class ImageGallery extends Component {
         {images.length >= 12 && status !== Status.PENDING && (
           <Button onClick={this.props.onLoadMore} />
         )}
+        {images.length === 0 && status !== Status.PENDING && (
+          <FailureMessage nextName={nextName} />
+        )}
         {showModal && (
           <Modal
             onOpenModal={this.toggleModal}
             largeImage={this.state.largeImage}
+            tag={this.state.tags}
           />
         )}
       </>

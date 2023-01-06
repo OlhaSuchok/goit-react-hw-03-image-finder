@@ -25,11 +25,11 @@ class Modal extends Component {
   };
 
   render() {
-    const { largeImage } = this.props;
+    const { largeImage, tag } = this.props;
     return (
       <Overlay onClick={this.onBackdropClick}>
         <ModalWrapper>
-          <img src={largeImage} alt="" />
+          <img src={largeImage} alt={tag} />
         </ModalWrapper>
       </Overlay>
     );
