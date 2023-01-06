@@ -20,11 +20,11 @@ const api = {
 export default api;
 
 // =============================================
+// import axios from 'axios';
 // const axios = require('axios').default;
 // try {
 //   const response = await axios.get(url);
 //   console.dir(response);
 //   return response;
 // } catch (error) {
-//   console.log(error);
-// }
+//   console.log(er
