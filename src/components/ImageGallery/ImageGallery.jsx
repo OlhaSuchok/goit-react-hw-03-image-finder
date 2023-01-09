@@ -6,7 +6,7 @@ import RejectedMessage from '../RejectedMessage/RejectedMessage';
 import IdleMessage from '../IdleMessage/IdleMessage';
 import FailureMessage from '../FailureMessage/FailureMessage';
 import Button from '../Button/Button';
-import imagesApi from '../services/images-api';
+import { imagesApi } from '../services/images-api';
 
 const Status = {
   IDLE: 'idle',
@@ -25,7 +25,7 @@ class ImageGallery extends Component {
     status: Status.IDLE,
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const prevName = prevProps.imageNameValue;
     const nextName = this.props.imageNameValue;
 
@@ -39,17 +39,18 @@ class ImageGallery extends Component {
     if (prevName !== nextName || prevPage !== nextPage) {
       this.setState({ status: Status.PENDING });
 
-      setTimeout(() => {
-        imagesApi
-          .fetchImages(nextName, nextPage)
-          .then(images =>
-            this.setState(prevState => ({
-              images: [...prevState.images, ...images.hits],
-              status: Status.RESOLVED,
-            }))
-          )
-          .catch(error => this.setState({ error, status: Status.REJECTED }));
-      }, 1000);
+      try {
+        const {
+          data: { hits },
+        } = await imagesApi(nextName, nextPage);
+        console.log(hits);
+        this.setState(prevState => ({
+          images: [...prevState.images, ...hits],
+          status: Status.RESOLVED,
+        }));
+      } catch (error) {
+        this.setState({ error, status: Status.REJECTED });
+      }
     }
   }
 
