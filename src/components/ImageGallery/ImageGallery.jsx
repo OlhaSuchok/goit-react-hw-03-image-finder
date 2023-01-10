@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from '../Modal/Modal';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Loader from '../Loader/Loader';
@@ -23,31 +23,54 @@ export default function ImageGallery({ imageNameValue, onLoadMore, page }) {
   const [error, setError] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
 
-  const componentDidUpdate = async (prevProps, prevState) => {
-    const prevName = prevProps.imageNameValue;
-    const prevPage = prevProps.page;
+  // const componentDidUpdate = async (prevProps, prevState) => {
+  //   const prevName = prevProps.imageNameValue;
+  //   const prevPage = prevProps.page;
 
-    if (prevName !== imageNameValue) {
-      setImages([]);
+  //   if (prevName !== imageNameValue) {
+  //     setImages([]);
+  //   }
+
+  //   if (prevName !== imageNameValue || prevPage !== page) {
+  //     setStatus(Status.PENDING);
+
+  //     try {
+  //       const {
+  //         data: { hits },
+  //       } = await imagesApi(imageNameValue, page);
+  //       console.log(hits);
+
+  //       setImages(prevState => [...prevState, ...hits]);
+  //       setStatus(Status.RESOLVED);
+  //     } catch (error) {
+  //       setStatus(Status.REJECTED);
+  //       setError(Status.REJECTED);
+  //     }
+  //   }
+  // };
+
+  useEffect(() => {
+    console.log('Привіт');
+    console.log(images);
+
+    setStatus(Status.PENDING);
+    try {
+      const {
+        data: { hits },
+      } = imagesApi(imageNameValue, page);
+      console.log(hits);
+
+      setImages(prevState => [...prevState, ...hits]);
+      setStatus(Status.RESOLVED);
+    } catch (error) {
+      setStatus(Status.REJECTED);
+      setError(Status.REJECTED);
     }
+  }, [imageNameValue, page]);
 
-    if (prevName !== imageNameValue || prevPage !== page) {
-      setStatus(Status.PENDING);
-
-      try {
-        const {
-          data: { hits },
-        } = await imagesApi(imageNameValue, page);
-        console.log(hits);
-
-        setImages(prevState => [...prevState, ...hits]);
-        setStatus(Status.RESOLVED);
-      } catch (error) {
-        setStatus(Status.REJECTED);
-        setError(Status.REJECTED);
-      }
-    }
-  };
+  useEffect(() => {
+    setImages([]);
+  }, [imageNameValue]);
 
   const toggleModal = event => {
     if (showModal) {
