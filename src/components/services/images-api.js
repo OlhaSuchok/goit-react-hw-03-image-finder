@@ -1,11 +1,20 @@
-import axios from 'axios';
-
-export const imagesApi = async (nextName, nextPage) => {
+async function fetchImages(nextName, nextPage) {
   const BASE_URL = 'https://pixabay.com/api';
   const API_KEY = '31897443-8d2d373622bb59a1b3cd97685';
   const url = `${BASE_URL}/?q=${nextName}&page=${nextPage}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`;
 
-  const data = await axios.get(url);
-  console.log(data.data.hits);
-  return data;
+  return await fetch(url).then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    return Promise.reject(
+      new Error('Щось пішло не так... Спробуйте перезавантажити сторінку.')
+    );
+  });
+}
+
+const api = {
+  fetchImages,
 };
+
+export default api;

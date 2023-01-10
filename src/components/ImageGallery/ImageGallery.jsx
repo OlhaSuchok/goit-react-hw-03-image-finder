@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import Modal from '../Modal/Modal';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Loader from '../Loader/Loader';
@@ -6,7 +6,7 @@ import RejectedMessage from '../RejectedMessage/RejectedMessage';
 import IdleMessage from '../IdleMessage/IdleMessage';
 import FailureMessage from '../FailureMessage/FailureMessage';
 import Button from '../Button/Button';
-import { imagesApi } from '../services/images-api';
+import imagesApi from '../services/images-api';
 
 const Status = {
   IDLE: 'idle',
@@ -15,100 +15,93 @@ const Status = {
   REJECTED: 'rejected',
 };
 
-export default function ImageGallery({ imageNameValue, onLoadMore, page }) {
-  const [images, setImages] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [largeImage, setLargeImage] = useState('');
-  const [tags, setTags] = useState('');
-  const [error, setError] = useState(null);
-  const [status, setStatus] = useState(Status.IDLE);
+class ImageGallery extends Component {
+  state = {
+    images: [],
+    showModal: false,
+    largeImage: '',
+    tags: '',
+    error: null,
+    status: Status.IDLE,
+  };
 
-  // const componentDidUpdate = async (prevProps, prevState) => {
-  //   const prevName = prevProps.imageNameValue;
-  //   const prevPage = prevProps.page;
+  componentDidUpdate(prevProps, prevState) {
+    const prevName = prevProps.imageNameValue;
+    const nextName = this.props.imageNameValue;
 
-  //   if (prevName !== imageNameValue) {
-  //     setImages([]);
-  //   }
+    const prevPage = prevProps.page;
+    const nextPage = this.props.page;
 
-  //   if (prevName !== imageNameValue || prevPage !== page) {
-  //     setStatus(Status.PENDING);
+    if (prevName !== nextName) {
+      this.setState({ images: [] });
+    }
 
-  //     try {
-  //       const {
-  //         data: { hits },
-  //       } = await imagesApi(imageNameValue, page);
-  //       console.log(hits);
+    if (prevName !== nextName || prevPage !== nextPage) {
+      this.setState({ status: Status.PENDING });
 
-  //       setImages(prevState => [...prevState, ...hits]);
-  //       setStatus(Status.RESOLVED);
-  //     } catch (error) {
-  //       setStatus(Status.REJECTED);
-  //       setError(Status.REJECTED);
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  console.log('Привіт');
-  console.log(images);
-
-  setStatus(Status.PENDING);
-  try {
-    const {
-      data: { hits },
-    } = imagesApi(imageNameValue, page);
-    console.log(hits);
-
-    setImages(prevState => [...prevState, ...hits]);
-    setStatus(Status.RESOLVED);
-  } catch (error) {
-    setStatus(Status.REJECTED);
-    setError(Status.REJECTED);
+      setTimeout(() => {
+        imagesApi
+          .fetchImages(nextName, nextPage)
+          .then(images =>
+            this.setState(prevState => ({
+              images: [...prevState.images, ...images.hits],
+              status: Status.RESOLVED,
+            }))
+          )
+          .catch(error => this.setState({ error, status: Status.REJECTED }));
+      }, 1000);
+    }
   }
-  // }, [imageNameValue, page]);
 
-  useEffect(() => {
-    setImages([]);
-  }, [imageNameValue]);
-
-  const toggleModal = event => {
+  toggleModal = event => {
+    const { showModal } = this.state;
     if (showModal) {
-      setShowModal(!showModal);
+      this.setState(({ showModal }) => ({
+        showModal: !showModal,
+      }));
     }
     if (event.target.nodeName !== 'IMG') {
       return;
     }
-
-    setShowModal(!showModal);
-    setLargeImage(event.target.dataset.image);
-    setTags(event.target.dataset.tag);
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+      largeImage: event.target.dataset.image,
+      tags: event.target.dataset.tag,
+    }));
   };
 
-  const nextName = imageNameValue;
+  render() {
+    const { images, showModal, error, status } = this.state;
+    const nextName = this.props.imageNameValue;
 
-  if (status === Status.IDLE) {
-    return <IdleMessage />;
+    if (status === Status.IDLE) {
+      return <IdleMessage />;
+    }
+
+    if (status === Status.REJECTED) {
+      return <RejectedMessage message={error.message} />;
+    }
+
+    return (
+      <>
+        <ImageGalleryItem images={images} onClick={this.toggleModal} />
+        {status === Status.PENDING && <Loader />}
+        {images.length >= 12 && status !== Status.PENDING && (
+          <Button onClick={this.props.onLoadMore} />
+        )}
+        {images.length === 0 && status !== Status.PENDING && (
+          <FailureMessage nextName={nextName} />
+        )}
+        {showModal && (
+          <Modal
+            onOpenModal={this.toggleModal}
+            largeImage={this.state.largeImage}
+            tag={this.state.tags}
+          />
+        )}
+      </>
+    );
   }
-
-  if (status === Status.REJECTED) {
-    return <RejectedMessage message={error.message} />;
-  }
-  console.log(images);
-
-  return (
-    <>
-      <ImageGalleryItem images={images} onClick={toggleModal} />
-      {status === Status.PENDING && <Loader />}
-      {images.length >= 12 && status !== Status.PENDING && (
-        <Button onClick={onLoadMore} />
-      )}
-      {images.length === 0 && status !== Status.PENDING && (
-        <FailureMessage nextName={nextName} />
-      )}
-      {showModal && (
-        <Modal onOpenModal={toggleModal} largeImage={largeImage} tag={tags} />
-      )}
-    </>
-  );
 }
+
+export default ImageGallery;
