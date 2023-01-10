@@ -49,24 +49,24 @@ export default function ImageGallery({ imageNameValue, onLoadMore, page }) {
   //   }
   // };
 
-  useEffect(() => {
-    console.log('Привіт');
-    console.log(images);
+  // useEffect(() => {
+  console.log('Привіт');
+  console.log(images);
 
-    setStatus(Status.PENDING);
-    try {
-      const {
-        data: { hits },
-      } = imagesApi(imageNameValue, page);
-      console.log(hits);
+  setStatus(Status.PENDING);
+  try {
+    const {
+      data: { hits },
+    } = imagesApi(imageNameValue, page);
+    console.log(hits);
 
-      setImages(prevState => [...prevState, ...hits]);
-      setStatus(Status.RESOLVED);
-    } catch (error) {
-      setStatus(Status.REJECTED);
-      setError(Status.REJECTED);
-    }
-  }, [imageNameValue, page]);
+    setImages(prevState => [...prevState, ...hits]);
+    setStatus(Status.RESOLVED);
+  } catch (error) {
+    setStatus(Status.REJECTED);
+    setError(Status.REJECTED);
+  }
+  // }, [imageNameValue, page]);
 
   useEffect(() => {
     setImages([]);
